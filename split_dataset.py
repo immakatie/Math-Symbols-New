@@ -3,9 +3,9 @@ import shutil
 import random
 
 # Пути к исходным данным и целевым папкам
-dataset_dir = 'F:\\Math-Symbols\\data\\extracted_images'  # Замените на путь к вашему исходному датасету
-train_dir = 'F:\\Math-Symbols\\data\\train'
-validation_dir = 'F:\\Math-Symbols\\data\\validation'
+dataset_dir = 'C:\\Users\\user\\Downloads\\data\\extracted_images'  # Замените на путь к вашему исходному датасету
+train_dir = 'C:\\Users\\user\\Downloads\\data\\train'
+validation_dir = 'C:\\Users\\user\\Downloads\\data\\validation'
 
 # Создание директорий для данных
 os.makedirs(train_dir, exist_ok=True)
