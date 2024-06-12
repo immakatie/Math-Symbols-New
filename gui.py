@@ -6,6 +6,9 @@ import tensorflow as tf
 # Загрузка обученной модели
 model = tf.keras.models.load_model('model.keras')
 
+# Список классов
+class_labels = ["-", "!", "( )", ",", "[ ]", "{ }", "+", "=", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "alpha", "ascii_124", "b", "beta", "C", "cos", "d", "delta", "div", "e", "exists", "f", "forall", "forward_slash", "G", "gamma", "geq", "gt", "H", "i", "in", "infinity", "int", "j", "k", "l", "lambda", "ldots", "leq", "lim", "log", "lt", "M", "mu", "N", "neq", "o", "p", "phi", "pm", "prime", "q", "R", "rightarrow", "S", "sigma", "sin", "sqrt", "sum", "T", "tan", "theta", "times", "u", "v", "w", "X", "y", "z"]
+
 class DrawingApp:
     def __init__(self, root):
         self.root = root
@@ -22,16 +25,17 @@ class DrawingApp:
         self.button_predict.pack()
 
         self.canvas.bind("<B1-Motion>", self.paint)
-        self.canvas.bind("<Button-3>", self.clear_on_right_click)  # При нажатии правой кнопки стирается
+        self.canvas.bind("<Button-3>", self.clear_on_right_click)
 
         self.image = Image.new("L", (280, 280), 255)
         self.draw = ImageDraw.Draw(self.image)
-        self.predicted_class = None
+        self.predicted_class_label = tk.Label(self.root, text="")
+        self.predicted_class_label.pack()
 
     def clear_canvas(self):
         self.canvas.delete("all")
         self.draw.rectangle([0, 0, 280, 280], fill=255)
-        self.predicted_class = None
+        self.predicted_class_label.config(text="")
 
     def clear_on_right_click(self, event):
         self.clear_canvas()
@@ -43,9 +47,6 @@ class DrawingApp:
         self.draw.ellipse([x1, y1, x2, y2], fill=0)
 
     def predict(self):
-        if self.predicted_class is not None:
-            self.predicted_class = None  # Сброс предыдущего предсказания
-
         # Преобразование изображения
         self.image = self.image.resize((28, 28))
         self.image = ImageOps.invert(self.image)
@@ -54,13 +55,10 @@ class DrawingApp:
 
         # Предсказание
         prediction = model.predict(image_array)
-        self.predicted_class = np.argmax(prediction)
+        predicted_class = np.argmax(prediction)
 
         # Показ результата
-        result_window = tk.Toplevel(self.root)
-        result_window.title("Prediction")
-        result_label = tk.Label(result_window, text=f"Predicted: {self.predicted_class}")
-        result_label.pack()
+        self.predicted_class_label.config(text=f"Predicted: {class_labels[predicted_class]}")
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -68,7 +66,3 @@ if __name__ == "__main__":
     root.mainloop()
 
 input("Нажмите Enter для выхода...")
-
-#https://www.kaggle.com/datasets/xainano/handwrittenmathsymbols/data +-
-
-#https://github.com/wblachowski/bhmsds sum
